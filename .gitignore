@@ -1,69 +1,7 @@
-# Dependencies
-node_modules/
-**/node_modules/
-
-# Build artifacts
-dist/
-build/
-out/
-.next/
-coverage/
-.nyc_output/
-
-# Logs and runtime files
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-*.pid
-*.pid.lock
-
-# Environment variables
+node_modules
 .env
-.env.*
-!.env.example
-!.env.*.example
-
-# OS and editor files
+client/build
+*.log
 .DS_Store
 Thumbs.db
-.idea/
-.vscode/
-*.sublime-project
-*.sublime-workspace
-
-# Temp and cache
-.cache/
-.tmp/
-temp/
-tmp/
-*.tmp
-*.bak
-*.swp
-*.swo
-
-# Archives and binaries
-*.zip
-*.tar
-*.tar.gz
-*.tgz
-*.rar
-*.7z
-*.exe
-*.dll
-*.so
-*.dylib
-
-# Test reports
-junit.xml
-*.lcov
-
-# Optional local Docker override
-docker-compose.override.yml
-
-
-assets/
-  
+/tmp

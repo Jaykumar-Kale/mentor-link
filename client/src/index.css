@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+* { box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: #f9fafb; margin: 0; }
+h1,h2,h3 { font-family: 'Poppins', sans-serif; }
+
+.page-header {
+  background: #f59e0b;
+  color: white;
+  padding: 40px 24px;
+  text-align: center;
+}
+.page-header p { color: rgba(255,255,255,0.85); margin: 6px 0 0; font-size: 14px; }
+.card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #f3f4f6;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  padding: 24px;
+}
+.btn-amber {
+  background: #f59e0b;
+  color: white;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-amber:hover { background: #d97706; }
+.btn-indigo {
+  background: #3730a3;
+  color: white;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-indigo:hover { background: #312e81; }

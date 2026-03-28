@@ -1,0 +1,4 @@
+INSTRUCTIONS:
+1. Copy your Mudita-logo.jpg into this folder and name it: mudita-logo.jpg
+2. Copy any hero background image and name it: hero-bg.jpg
+These files are used by Navbar.js and HomePage.js
