@@ -5,3 +5,9 @@ client/build
 .DS_Store
 Thumbs.db
 /tmp
+
+# Ignore the Assets folder, which may contain Images.
+assets/
+assets
+
+
