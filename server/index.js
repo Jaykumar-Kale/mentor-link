@@ -22,9 +22,9 @@ app.get('/', (req, res) => res.json({ message: 'MentorLink API running!' }));
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    console.log('JK MongoDB Connected successfully!!!!');
+    console.log('Jk MongoDB Connected');
     app.listen(process.env.PORT || 5000, () =>
-      console.log(`JK Server running on port ${process.env.PORT || 5000}`)
+      console.log(`Jk Server running on port ${process.env.PORT || 5000}`)
     );
   })
   .catch(err => console.log('❌ DB Error:', err));

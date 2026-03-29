@@ -1,5 +1,6 @@
 node_modules
 .env
+.env.example
 client/build
 *.log
 .DS_Store
@@ -7,7 +8,6 @@ Thumbs.db
 /tmp
 
 # Ignore the Assets folder, which may contain Images.
-assets/
 assets
 
 
