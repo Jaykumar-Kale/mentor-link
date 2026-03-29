@@ -1,65 +1,158 @@
-import { useState } from 'react';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
-import { Link } from 'react-router-dom';
-import api from '../../utils/api';
-import toast from 'react-hot-toast';
+import { useState } from "react";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
+import { Link } from "react-router-dom";
+import api from "../../utils/api";
+import toast from "react-hot-toast";
 
-const DONATE_AMOUNTS = ['500','1000','2500','5000','10000'];
+const DONATE_AMOUNTS = ["500", "1000", "2500", "5000", "10000"];
 
 export default function GetInvolvedPage() {
-  const [donateAmt, setDonateAmt] = useState('');
-  const [customAmt, setCustomAmt] = useState('');
+  const [donateAmt, setDonateAmt] = useState("");
+  const [customAmt, setCustomAmt] = useState("");
   const [showQR, setShowQR] = useState(false);
-  const [contactForm, setContactForm] = useState({ name:'',email:'',phone:'',message:'' });
+  const [contactForm, setContactForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
   const [sending, setSending] = useState(false);
-  const [volunteerForm, setVolunteerForm] = useState({ name:'',email:'',phone:'',occupation:'',qualification:'',message:'' });
+  const [volunteerForm, setVolunteerForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    occupation: "",
+    qualification: "",
+    message: "",
+  });
   const [volunteerSent, setVolunteerSent] = useState(false);
+  const [showScholarshipModal, setShowScholarshipModal] = useState(false);
+  const [scholarshipForm, setScholarshipForm] = useState({
+    name: "",
+    email: "",
+    college: "",
+    phone: "",
+    year: "",
+    field: "",
+    cgpa: "",
+    whyDeserving: "",
+    familyBackground: "",
+    financialNeed: "",
+    achievements: "",
+  });
+  const [scholarshipSubmitting, setScholarshipSubmitting] = useState(false);
+  const [scholarshipSubmitted, setScholarshipSubmitted] = useState(false);
 
-  const handleDonate = e => {
+  const handleDonate = (e) => {
     e.preventDefault();
     const amount = customAmt || donateAmt;
-    if (!amount) { toast.error('Please select or enter an amount'); return; }
+    if (!amount) {
+      toast.error("Please select or enter an amount");
+      return;
+    }
     setShowQR(true);
   };
 
-  const handleContact = async e => {
+  const handleContact = async (e) => {
     e.preventDefault();
     setSending(true);
-    await new Promise(r => setTimeout(r, 1000));
-    toast.success('Message sent! We will get back to you soon.');
-    setContactForm({ name:'',email:'',phone:'',message:'' });
+    await new Promise((r) => setTimeout(r, 1000));
+    toast.success("Message sent! We will get back to you soon.");
+    setContactForm({ name: "", email: "", phone: "", message: "" });
     setSending(false);
   };
 
-  const handleVolunteer = async e => {
+  const handleVolunteer = async (e) => {
     e.preventDefault();
-    await new Promise(r => setTimeout(r, 800));
+    await new Promise((r) => setTimeout(r, 800));
     setVolunteerSent(true);
-    toast.success('Thank you for volunteering! We will reach out soon.');
+    toast.success("Thank you for volunteering! We will reach out soon.");
+  };
+
+  const handleScholarshipSubmit = async (e) => {
+    e.preventDefault();
+    setScholarshipSubmitting(true);
+    
+    try {
+      const response = await api.post('/scholarship-applications/submit', scholarshipForm);
+      
+      if (response.data.success) {
+        toast.success("Application submitted successfully! Check your email for confirmation.");
+        setScholarshipSubmitted(true);
+        setScholarshipForm({
+          name: "",
+          email: "",
+          college: "",
+          phone: "",
+          year: "",
+          field: "",
+          cgpa: "",
+          whyDeserving: "",
+          familyBackground: "",
+          financialNeed: "",
+          achievements: "",
+        });
+        setTimeout(() => {
+          setShowScholarshipModal(false);
+          setScholarshipSubmitted(false);
+        }, 3000);
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to submit application. Please try again.");
+    } finally {
+      setScholarshipSubmitting(false);
+    }
   };
 
   return (
     <div className="bg-white">
       <Navbar />
-      <div style={{paddingTop:'72px'}}>
+      <div style={{ paddingTop: "72px" }}>
         {/* Hero */}
-        <div className="relative" style={{background:'linear-gradient(135deg,#1e1b4b 0%,#3730a3 100%)'}}>
+        <div
+          className="relative"
+          style={{
+            background: "linear-gradient(135deg,#1e1b4b 0%,#3730a3 100%)",
+          }}
+        >
           <img
             src="https://muditaalliance.org/wp-content/uploads/2025/02/Get-Involved.jpg"
             alt="Get Involved"
             className="absolute inset-0 w-full h-full object-cover opacity-20"
           />
           <div className="relative max-w-7xl mx-auto px-6 py-20 text-center text-white">
-            <p className="text-amber-400 font-bold text-sm uppercase tracking-widest mb-3">Join Us</p>
-            <h1 className="text-5xl font-bold mb-5" style={{fontFamily:'Fraunces,serif'}}>Get Involved</h1>
-            <p className="text-indigo-200 text-lg max-w-2xl mx-auto">
-              Help Mudita help others. Whether you donate, volunteer, or mentor — every action creates ripples of joy.
+            <p className="text-amber-400 font-bold text-sm uppercase tracking-widest mb-3">
+              Join Us
             </p>
-            <div className="flex justify-center gap-4 mt-8">
-              <a href="#donate" className="btn-amber">Donate Now</a>
-              <a href="#volunteer" className="btn-outline" style={{borderColor:'white',color:'white'}}>Volunteer</a>
-              <a href="#apply" className="btn-outline" style={{borderColor:'rgba(255,255,255,0.5)',color:'white'}}>Apply for Aid</a>
+            <h1
+              className="text-5xl font-bold mb-5"
+              style={{ fontFamily: "Fraunces,serif" }}
+            >
+              Get Involved
+            </h1>
+            <p className="text-indigo-200 text-lg max-w-2xl mx-auto">
+              Help Mudita help others. Whether you donate, volunteer, or mentor
+              — every action creates ripples of joy.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
+              <a href="#donate" className="btn-amber">
+                Donate Now
+              </a>
+              <a
+                href="#volunteer"
+                className="btn-outline"
+                style={{ borderColor: "white", color: "white" }}
+              >
+                Volunteer
+              </a>
+              <a
+                href="#apply"
+                className="btn-outline"
+                style={{ borderColor: "rgba(255,255,255,0.5)", color: "white" }}
+              >
+                Apply for Aid
+              </a>
             </div>
           </div>
         </div>
@@ -68,29 +161,46 @@ export default function GetInvolvedPage() {
         <section id="donate" className="section max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             <div>
-              <p className="text-amber-500 font-bold text-sm uppercase tracking-widest mb-3">Support Us</p>
-              <h2 className="text-3xl font-bold text-gray-900 mb-5" style={{fontFamily:'Fraunces,serif'}}>
+              <p className="text-amber-500 font-bold text-sm uppercase tracking-widest mb-3">
+                Support Us
+              </p>
+              <h2
+                className="text-3xl font-bold text-gray-900 mb-5"
+                style={{ fontFamily: "Fraunces,serif" }}
+              >
                 Make a Donation
               </h2>
               <p className="text-gray-600 mb-3">
-                When you help Mudita help those in need, you join thousands who have discovered that doing good feels good.
+                When you help Mudita help those in need, you join thousands who
+                have discovered that doing good feels good.
               </p>
               <p className="text-gray-600 mb-8 text-sm">
-                All donations are <strong>tax deductible under Section 80(G)</strong> of the Income Tax Act, 1961.
+                All donations are{" "}
+                <strong>tax deductible under Section 80(G)</strong> of the
+                Income Tax Act, 1961.
               </p>
 
               {!showQR ? (
                 <form onSubmit={handleDonate} className="space-y-5">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">Select Amount (₹)</label>
-                    <div className="grid grid-cols-3 gap-3">
-                      {DONATE_AMOUNTS.map(a => (
-                        <button key={a} type="button" onClick={() => { setDonateAmt(a); setCustomAmt(''); }}
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                      Select Amount (₹)
+                    </label>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {DONATE_AMOUNTS.map((a) => (
+                        <button
+                          key={a}
+                          type="button"
+                          onClick={() => {
+                            setDonateAmt(a);
+                            setCustomAmt("");
+                          }}
                           className={`py-3 rounded-xl font-bold text-sm border-2 transition ${
                             donateAmt === a && !customAmt
-                              ? 'border-indigo-700 bg-indigo-50 text-indigo-700'
-                              : 'border-gray-200 text-gray-600 hover:border-indigo-300'
-                          }`}>
+                              ? "border-indigo-700 bg-indigo-50 text-indigo-700"
+                              : "border-gray-200 text-gray-600 hover:border-indigo-300"
+                          }`}
+                        >
                           ₹{Number(a).toLocaleString()}
                         </button>
                       ))}
@@ -98,56 +208,108 @@ export default function GetInvolvedPage() {
                         type="number"
                         placeholder="Custom amount"
                         value={customAmt}
-                        onChange={e => { setCustomAmt(e.target.value); setDonateAmt(''); }}
+                        onChange={(e) => {
+                          setCustomAmt(e.target.value);
+                          setDonateAmt("");
+                        }}
                         className="form-input col-span-3"
                       />
                     </div>
                   </div>
-                  <button type="submit" className="btn-amber w-full text-center py-4 text-base">
-                    Donate ₹{(customAmt || donateAmt) ? Number(customAmt || donateAmt).toLocaleString() : '—'}
+                  <button
+                    type="submit"
+                    className="btn-amber w-full text-center py-4 text-base"
+                  >
+                    Donate ₹
+                    {customAmt || donateAmt
+                      ? Number(customAmt || donateAmt).toLocaleString()
+                      : "—"}
                   </button>
                   <p className="text-xs text-gray-400 text-center">
-                    After clicking, you'll be shown UPI/bank details for transfer.
+                    After clicking, you'll be shown UPI/bank details for
+                    transfer.
                   </p>
                 </form>
               ) : (
                 <div className="bg-indigo-50 rounded-2xl p-8 border border-indigo-200 text-center">
-                  <h3 className="font-bold text-indigo-800 text-xl mb-2">Thank you! 🙏</h3>
-                  <p className="text-gray-600 text-sm mb-5">Please transfer ₹{Number(customAmt||donateAmt).toLocaleString()} via:</p>
+                  <h3 className="font-bold text-indigo-800 text-xl mb-2">
+                    Thank you! 
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-5">
+                    Please transfer ₹
+                    {Number(customAmt || donateAmt).toLocaleString()} via:
+                  </p>
                   <div className="bg-white rounded-xl p-5 border border-gray-200 text-left space-y-2 text-sm mb-5">
-                    <p><span className="font-semibold text-gray-700">UPI ID:</span> mudita@muditaalliance.org</p>
-                    <p><span className="font-semibold text-gray-700">Bank:</span> HDFC Bank</p>
-                    <p><span className="font-semibold text-gray-700">Account Name:</span> Mudita Alliance For Giving</p>
-                    <p><span className="font-semibold text-gray-700">Contact:</span> +91 97661 72334</p>
+                    <p>
+                      <span className="font-semibold text-gray-700">
+                        UPI ID:
+                      </span>{" "}
+                      mudita@muditaalliance.org
+                    </p>
+                    <p>
+                      <span className="font-semibold text-gray-700">Bank:</span>{" "}
+                      HDFC Bank
+                    </p>
+                    <p>
+                      <span className="font-semibold text-gray-700">
+                        Account Name:
+                      </span>{" "}
+                      Mudita Alliance For Giving
+                    </p>
+                    <p>
+                      <span className="font-semibold text-gray-700">
+                        Contact:
+                      </span>{" "}
+                      +91 97661 72334
+                    </p>
                   </div>
-                  <button onClick={() => setShowQR(false)} className="text-sm text-indigo-600 hover:underline">← Change amount</button>
+                  <button
+                    onClick={() => setShowQR(false)}
+                    className="text-sm text-indigo-600 hover:underline"
+                  >
+                    ← Change amount
+                  </button>
                 </div>
               )}
             </div>
-
+{/* Icons= 🙏, 🎓, 👁️, 🍱 */}
             {/* Why donate */}
             <div className="space-y-5">
               <div className="bg-indigo-50 rounded-2xl p-6 border border-indigo-100">
-                <h3 className="font-bold text-indigo-800 mb-3">With ₹500, you can...</h3>
+                <h3 className="font-bold text-indigo-800 mb-3">
+                  With ₹500, you can...
+                </h3>
                 <ul className="space-y-2 text-sm text-gray-600">
-                  <li className="flex items-center gap-2"><span className="text-amber-500">🎓</span>Contribute to a student's monthly scholarship</li>
-                  <li className="flex items-center gap-2"><span className="text-amber-500">👁️</span>Fund an eye screening for a child</li>
-                  <li className="flex items-center gap-2"><span className="text-amber-500">🍱</span>Provide rations for a senior citizen for a week</li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-amber-500"></span>1. Contribute to a
+                    student's monthly scholarship
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-amber-500"></span>2. Fund an eye
+                    screening for a child
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-amber-500"></span>3. Provide rations
+                    for a senior citizen for a week
+                  </li>
                 </ul>
               </div>
               <div className="card">
-                <h3 className="font-bold text-gray-800 mb-3">Your impact is transparent</h3>
+                <h3 className="font-bold text-gray-800 mb-3">
+                  Your impact is transparent
+                </h3>
                 <p className="text-gray-500 text-sm leading-relaxed">
-                  At Mudita, we believe in complete transparency. Every rupee donated is tracked and
-                  reported. Our monthly newsletter keeps every donor informed about exactly how
-                  their contribution is changing lives.
+                  At Mudita, we believe in complete transparency. Every rupee
+                  donated is tracked and reported. Our monthly newsletter keeps
+                  every donor informed about exactly how their contribution is
+                  changing lives.
                 </p>
               </div>
               <div className="card">
                 <h3 className="font-bold text-gray-800 mb-2">Tax Benefits</h3>
                 <p className="text-gray-500 text-sm">
-                  Mudita holds CSR-1 certification. All donations are 80(G) tax deductible.
-                  Receipts provided within 7 working days.
+                  Mudita holds CSR-1 certification. All donations are 80(G) tax
+                  deductible. Receipts provided within 7 working days.
                 </p>
               </div>
             </div>
@@ -158,68 +320,171 @@ export default function GetInvolvedPage() {
         <section id="volunteer" className="section bg-gray-50 px-6">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-10">
-              <p className="text-amber-500 font-bold text-sm uppercase tracking-widest mb-3">Help Us Help Others</p>
-              <h2 className="text-3xl font-bold text-gray-900 mb-3" style={{fontFamily:'Fraunces,serif'}}>Volunteer with Us</h2>
-              <p className="text-gray-500">Doing good is hard work. We're always looking for a helping hand.</p>
+              <p className="text-amber-500 font-bold text-sm uppercase tracking-widest mb-3">
+                Help Us Help Others
+              </p>
+              <h2
+                className="text-3xl font-bold text-gray-900 mb-3"
+                style={{ fontFamily: "Fraunces,serif" }}
+              >
+                Volunteer with Us
+              </h2>
+              <p className="text-gray-500">
+                Doing good is hard work. We're always looking for a helping
+                hand.
+              </p>
             </div>
             {!volunteerSent ? (
-              <form onSubmit={handleVolunteer} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-4">
+              <form
+                onSubmit={handleVolunteer}
+                className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-4"
+              >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-gray-500 mb-1">Full Name *</label>
-                    <input required className="form-input" value={volunteerForm.name}
-                      onChange={e=>setVolunteerForm({...volunteerForm,name:e.target.value})} placeholder="Your name" />
+                    <label className="block text-xs font-semibold text-gray-500 mb-1">
+                      Full Name *
+                    </label>
+                    <input
+                      required
+                      className="form-input"
+                      value={volunteerForm.name}
+                      onChange={(e) =>
+                        setVolunteerForm({
+                          ...volunteerForm,
+                          name: e.target.value,
+                        })
+                      }
+                      placeholder="Your name"
+                    />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-500 mb-1">Email *</label>
-                    <input type="email" required className="form-input" value={volunteerForm.email}
-                      onChange={e=>setVolunteerForm({...volunteerForm,email:e.target.value})} placeholder="you@email.com" />
+                    <label className="block text-xs font-semibold text-gray-500 mb-1">
+                      Email *
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      className="form-input"
+                      value={volunteerForm.email}
+                      onChange={(e) =>
+                        setVolunteerForm({
+                          ...volunteerForm,
+                          email: e.target.value,
+                        })
+                      }
+                      placeholder="your-email@email.com"
+                    />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-500 mb-1">Phone</label>
-                    <input className="form-input" value={volunteerForm.phone}
-                      onChange={e=>setVolunteerForm({...volunteerForm,phone:e.target.value})} placeholder="+91 9876543210" />
+                    <label className="block text-xs font-semibold text-gray-500 mb-1">
+                      Phone
+                    </label>
+                    <input
+                      className="form-input"
+                      value={volunteerForm.phone}
+                      onChange={(e) =>
+                        setVolunteerForm({
+                          ...volunteerForm,
+                          phone: e.target.value,
+                        })
+                      }
+                      placeholder="+91 8010620388"
+                    />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-500 mb-1">Current Occupation</label>
-                    <select className="form-input" value={volunteerForm.occupation}
-                      onChange={e=>setVolunteerForm({...volunteerForm,occupation:e.target.value})}>
+                    <label className="block text-xs font-semibold text-gray-500 mb-1">
+                      Current Occupation
+                    </label>
+                    <select
+                      className="form-input"
+                      value={volunteerForm.occupation}
+                      onChange={(e) =>
+                        setVolunteerForm({
+                          ...volunteerForm,
+                          occupation: e.target.value,
+                        })
+                      }
+                    >
                       <option value="">Select</option>
-                      <option>Student</option><option>Employed</option><option>Homemaker</option><option>Other</option>
+                      <option>Student</option>
+                      <option>Employed</option>
+                      <option>Homemaker</option>
+                      <option>Other</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-500 mb-1">Highest Qualification</label>
-                    <select className="form-input" value={volunteerForm.qualification}
-                      onChange={e=>setVolunteerForm({...volunteerForm,qualification:e.target.value})}>
+                    <label className="block text-xs font-semibold text-gray-500 mb-1">
+                      Highest Qualification
+                    </label>
+                    <select
+                      className="form-input"
+                      value={volunteerForm.qualification}
+                      onChange={(e) =>
+                        setVolunteerForm({
+                          ...volunteerForm,
+                          qualification: e.target.value,
+                        })
+                      }
+                    >
                       <option value="">Select</option>
-                      <option>School student</option><option>College student</option><option>Graduate</option><option>Post Graduate</option>
+                      <option>School student</option>
+                      <option>College student</option>
+                      <option>Graduate</option>
+                      <option>Post Graduate</option>
                     </select>
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="block text-xs font-semibold text-gray-500 mb-1">How would you like to help?</label>
-                    <textarea className="form-input" rows={3} value={volunteerForm.message}
-                      onChange={e=>setVolunteerForm({...volunteerForm,message:e.target.value})}
-                      placeholder="Tell us your skills and how you'd like to contribute..." />
+                    <label className="block text-xs font-semibold text-gray-500 mb-1">
+                      How would you like to help?
+                    </label>
+                    <textarea
+                      className="form-input"
+                      rows={3}
+                      value={volunteerForm.message}
+                      onChange={(e) =>
+                        setVolunteerForm({
+                          ...volunteerForm,
+                          message: e.target.value,
+                        })
+                      }
+                      placeholder="Tell us your skills and how you'd like to contribute..."
+                    />
                   </div>
                 </div>
-                <button type="submit" className="btn-indigo w-full text-center py-3">Submit Volunteer Application</button>
+                <button
+                  type="submit"
+                  className="btn-indigo w-full text-center py-3"
+                >
+                  Submit Volunteer Application
+                </button>
               </form>
             ) : (
               <div className="bg-green-50 border border-green-200 rounded-2xl p-12 text-center">
-                <div className="text-5xl mb-4">🙏</div>
-                <h3 className="font-bold text-green-800 text-xl mb-2">Thank you for volunteering!</h3>
-                <p className="text-green-700">We'll reach out to you at {volunteerForm.email} within a few days.</p>
+                <div className="text-5xl mb-4"></div>
+                <h3 className="font-bold text-green-800 text-xl mb-2">
+                  Thank you for volunteering!
+                </h3>
+                <p className="text-green-700">
+                  We'll reach out to you at {volunteerForm.email} within a few
+                  days.
+                </p>
               </div>
             )}
 
             {/* Mentor CTA */}
             <div className="mt-8 bg-indigo-700 text-white rounded-2xl p-6 flex flex-col sm:flex-row items-center gap-4 justify-between">
               <div>
-                <h3 className="font-bold text-lg">Want to mentor a Mudita scholar?</h3>
-                <p className="text-indigo-200 text-sm mt-1">Join MentorLink as a volunteer mentor and guide a student's career.</p>
+                <h3 className="font-bold text-lg">
+                  Want to mentor a Mudita scholar?
+                </h3>
+                <p className="text-indigo-200 text-sm mt-1">
+                  Join MentorLink as a volunteer mentor and guide a student's
+                  career.
+                </p>
               </div>
-              <Link to="/register" className="btn-amber flex-shrink-0">Become a Mentor</Link>
+              <Link to="/register" className="btn-amber flex-shrink-0">
+                Become a Mentor
+              </Link>
             </div>
           </div>
         </section>
@@ -227,25 +492,54 @@ export default function GetInvolvedPage() {
         {/* ─── APPLY FOR AID ─── */}
         <section id="apply" className="section max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
-            <p className="text-amber-500 font-bold text-sm uppercase tracking-widest mb-3">Need Help?</p>
-            <h2 className="text-3xl font-bold text-gray-900 mb-3" style={{fontFamily:'Fraunces,serif'}}>Apply for Support</h2>
+            <p className="text-amber-500 font-bold text-sm uppercase tracking-widest mb-3">
+              Need Help?
+            </p>
+            <h2
+              className="text-3xl font-bold text-gray-900 mb-3"
+              style={{ fontFamily: "Fraunces,serif" }}
+            >
+              Apply for Support
+            </h2>
             <p className="text-gray-500 max-w-xl mx-auto">
-              We pride ourselves on our ability to bring together those who need help and those who can.
+              We pride ourselves on our ability to bring together those who need
+              help and those who can.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
             <div className="card text-center hover:shadow-lg transition cursor-pointer">
-              <div className="text-4xl mb-3">🎓</div>
-              <h3 className="font-bold text-gray-800 text-lg mb-2">Apply for Scholarship</h3>
-              <p className="text-gray-500 text-sm mb-5">Bright students from underserved backgrounds studying STEM in Maharashtra.</p>
-              <a href="mailto:scholarships@muditaalliance.org" className="btn-indigo text-sm">Apply via Email</a>
+              <div className="text-4xl mb-3"></div>
+              <h3 className="font-bold text-gray-800 text-lg mb-2">
+                Apply for Scholarship
+              </h3>
+              <p className="text-gray-500 text-sm mb-5">
+                Bright students from underserved backgrounds studying STEM in
+                Maharashtra.
+              </p>
+              <button
+                onClick={() => setShowScholarshipModal(true)}
+                className="btn-indigo text-sm"
+              >
+                Apply Now
+              </button>
             </div>
             <div className="card text-center hover:shadow-lg transition cursor-pointer">
-              <div className="text-4xl mb-3">🏥</div>
-              <h3 className="font-bold text-gray-800 text-lg mb-2">Apply for Medical Aid</h3>
-              <p className="text-gray-500 text-sm mb-5">Cancer treatment support and eye care for underprivileged patients.</p>
-              <a href="https://muditaalliance.org/wp-content/uploads/2025/03/Application-form-for-the-LKT-medical-aid.docx.pdf"
-                target="_blank" rel="noreferrer" className="btn-outline text-sm">Download Form</a>
+              <div className="text-4xl mb-3"></div>
+              <h3 className="font-bold text-gray-800 text-lg mb-2">
+                Apply for Medical Aid
+              </h3>
+              <p className="text-gray-500 text-sm mb-5">
+                Cancer treatment support and eye care for underprivileged
+                patients.
+              </p>
+              <a
+                href="https://muditaalliance.org/wp-content/uploads/2025/03/Application-form-for-the-LKT-medical-aid.docx.pdf"
+                target="_blank"
+                rel="noreferrer"
+                className="btn-outline text-sm"
+              >
+                Download Form
+              </a>
             </div>
           </div>
         </section>
@@ -254,63 +548,389 @@ export default function GetInvolvedPage() {
         <section id="contact" className="section bg-gray-50 px-6">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-10">
-              <p className="text-amber-500 font-bold text-sm uppercase tracking-widest mb-3">Reach Out</p>
-              <h2 className="text-3xl font-bold text-gray-900 mb-3" style={{fontFamily:'Fraunces,serif'}}>Let's Talk</h2>
-              <p className="text-gray-500">If you need help, or can help — reach out to us here.</p>
+              <p className="text-amber-500 font-bold text-sm uppercase tracking-widest mb-3">
+                Reach Out
+              </p>
+              <h2
+                className="text-3xl font-bold text-gray-900 mb-3"
+                style={{ fontFamily: "Fraunces,serif" }}
+              >
+                Let's Talk
+              </h2>
+              <p className="text-gray-500">
+                If you need help, or can help — reach out to us here.
+              </p>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="space-y-4">
                 <div className="bg-white rounded-xl p-5 border border-gray-100">
-                  <p className="text-xs text-gray-400 mb-1">General Enquiries</p>
-                  <a href="mailto:mudita@muditaalliance.org" className="font-semibold text-indigo-700 hover:underline">mudita@muditaalliance.org</a>
+                  <p className="text-xs text-gray-400 mb-1">
+                    General Enquiries
+                  </p>
+                  <a
+                    href="mailto:mudita@muditaalliance.org"
+                    className="font-semibold text-indigo-700 hover:underline"
+                  >
+                    mudita@muditaalliance.org
+                  </a>
                 </div>
                 <div className="bg-white rounded-xl p-5 border border-gray-100">
-                  <p className="text-xs text-gray-400 mb-1">Mentoring Programme</p>
-                  <a href="mailto:mentoring@muditaalliance.org" className="font-semibold text-indigo-700 hover:underline">mentoring@muditaalliance.org</a>
+                  <p className="text-xs text-gray-400 mb-1">
+                    Mentoring Programme
+                  </p>
+                  <a
+                    href="mailto:mentoring@muditaalliance.org"
+                    className="font-semibold text-indigo-700 hover:underline"
+                  >
+                    mentoring@muditaalliance.org
+                  </a>
                 </div>
                 <div className="bg-white rounded-xl p-5 border border-gray-100">
-                  <p className="text-xs text-gray-400 mb-1">CSR & Donor Relations</p>
-                  <a href="mailto:csr@muditaalliance.org" className="font-semibold text-indigo-700 hover:underline">csr@muditaalliance.org</a>
+                  <p className="text-xs text-gray-400 mb-1">
+                    CSR & Donor Relations
+                  </p>
+                  <a
+                    href="mailto:csr@muditaalliance.org"
+                    className="font-semibold text-indigo-700 hover:underline"
+                  >
+                    csr@muditaalliance.org
+                  </a>
                 </div>
                 <div className="bg-white rounded-xl p-5 border border-gray-100">
                   <p className="text-xs text-gray-400 mb-1">Phone</p>
-                  <a href="tel:+919766172334" className="font-semibold text-indigo-700">+91 97661 72334</a>
+                  <a
+                    href="tel:+919766172334"
+                    className="font-semibold text-indigo-700"
+                  >
+                    +91 97661 72334
+                  </a>
                 </div>
                 <div className="bg-white rounded-xl p-5 border border-gray-100">
                   <p className="text-xs text-gray-400 mb-1">Office Address</p>
-                  <p className="text-sm text-gray-700">K-901 Marvel Diva, Next to Seasons Mall,<br/>Magarpatta City, Hadapsar, Pune 411028</p>
+                  <p className="text-sm text-gray-700">
+                    K-901 Marvel Diva, Next to Seasons Mall,
+                    <br />
+                    Magarpatta City, Hadapsar, Pune 411028
+                  </p>
                 </div>
               </div>
-              <form onSubmit={handleContact} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
+              <form
+                onSubmit={handleContact}
+                className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4"
+              >
                 <div>
-                  <label className="block text-xs font-semibold text-gray-500 mb-1">Name *</label>
-                  <input required className="form-input" value={contactForm.name}
-                    onChange={e=>setContactForm({...contactForm,name:e.target.value})} placeholder="Your name" />
+                  <label className="block text-xs font-semibold text-gray-500 mb-1">
+                    Name *
+                  </label>
+                  <input
+                    required
+                    className="form-input"
+                    value={contactForm.name}
+                    onChange={(e) =>
+                      setContactForm({ ...contactForm, name: e.target.value })
+                    }
+                    placeholder="Your name"
+                  />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-500 mb-1">Email *</label>
-                  <input type="email" required className="form-input" value={contactForm.email}
-                    onChange={e=>setContactForm({...contactForm,email:e.target.value})} />
+                  <label className="block text-xs font-semibold text-gray-500 mb-1">
+                    Email *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    className="form-input"
+                    value={contactForm.email}
+                    onChange={(e) =>
+                      setContactForm({ ...contactForm, email: e.target.value })
+                    }
+                  />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-500 mb-1">Phone</label>
-                  <input className="form-input" value={contactForm.phone}
-                    onChange={e=>setContactForm({...contactForm,phone:e.target.value})} />
+                  <label className="block text-xs font-semibold text-gray-500 mb-1">
+                    Phone
+                  </label>
+                  <input
+                    className="form-input"
+                    value={contactForm.phone}
+                    onChange={(e) =>
+                      setContactForm({ ...contactForm, phone: e.target.value })
+                    }
+                  />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-500 mb-1">Message *</label>
-                  <textarea required rows={4} className="form-input" value={contactForm.message}
-                    onChange={e=>setContactForm({...contactForm,message:e.target.value})}
-                    placeholder="How can we help you?" />
+                  <label className="block text-xs font-semibold text-gray-500 mb-1">
+                    Message *
+                  </label>
+                  <textarea
+                    required
+                    rows={4}
+                    className="form-input"
+                    value={contactForm.message}
+                    onChange={(e) =>
+                      setContactForm({
+                        ...contactForm,
+                        message: e.target.value,
+                      })
+                    }
+                    placeholder="How can we help you?"
+                  />
                 </div>
-                <button type="submit" disabled={sending} className="btn-indigo w-full text-center py-3 disabled:opacity-60">
-                  {sending ? 'Sending...' : 'Send Message'}
+                <button
+                  type="submit"
+                  disabled={sending}
+                  className="btn-indigo w-full text-center py-3 disabled:opacity-60"
+                >
+                  {sending ? "Sending..." : "Send Message"}
                 </button>
               </form>
             </div>
           </div>
         </section>
       </div>
+
+      {/* Scholarship Modal */}
+      {showScholarshipModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            {!scholarshipSubmitted ? (
+              <div className="p-8">
+                <div className="flex justify-between items-start gap-4 mb-6">
+                  <div>
+                    <h2 className="text-3xl font-bold text-gray-900 mb-1" style={{ fontFamily: "Fraunces,serif" }}>
+                      Scholarship Application
+                    </h2>
+                    <p className="text-gray-500 text-sm max-w-lg">
+                      Apply for the Mudita Scholarship program. We support bright students from underserved backgrounds studying STEM in Maharashtra.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setShowScholarshipModal(false)}
+                    className="text-gray-400 hover:text-gray-600 text-2xl h-8 w-8 flex items-center justify-center"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <form onSubmit={handleScholarshipSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-600 mb-1">
+                        Full Name *
+                      </label>
+                      <input
+                        required
+                        type="text"
+                        className="form-input"
+                        value={scholarshipForm.name}
+                        onChange={(e) =>
+                          setScholarshipForm({ ...scholarshipForm, name: e.target.value })
+                        }
+                        placeholder="Your full name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-600 mb-1">
+                        Email *
+                      </label>
+                      <input
+                        required
+                        type="email"
+                        className="form-input"
+                        value={scholarshipForm.email}
+                        onChange={(e) =>
+                          setScholarshipForm({ ...scholarshipForm, email: e.target.value })
+                        }
+                        placeholder="your-email@email.com"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-600 mb-1">
+                        College/University
+                      </label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        value={scholarshipForm.college}
+                        onChange={(e) =>
+                          setScholarshipForm({ ...scholarshipForm, college: e.target.value })
+                        }
+                        placeholder="Your college name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-600 mb-1">
+                        Phone
+                      </label>
+                      <input
+                        type="tel"
+                        className="form-input"
+                        value={scholarshipForm.phone}
+                        onChange={(e) =>
+                          setScholarshipForm({ ...scholarshipForm, phone: e.target.value })
+                        }
+                        placeholder="+91 98765 43210"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-600 mb-1">
+                        Year of Study
+                      </label>
+                      <select
+                        className="form-input"
+                        value={scholarshipForm.year}
+                        onChange={(e) =>
+                          setScholarshipForm({ ...scholarshipForm, year: e.target.value })
+                        }
+                      >
+                        <option value="">Select</option>
+                        <option>1st Year</option>
+                        <option>2nd Year</option>
+                        <option>3rd Year</option>
+                        <option>4th Year</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-600 mb-1">
+                        Field of Study
+                      </label>
+                      <select
+                        className="form-input"
+                        value={scholarshipForm.field}
+                        onChange={(e) =>
+                          setScholarshipForm({ ...scholarshipForm, field: e.target.value })
+                        }
+                      >
+                        <option value="">Select</option>
+                        <option>Engineering</option>
+                        <option>Medicine</option>
+                        <option>Science</option>
+                        <option>Technology</option>
+                        <option>Other STEM</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-600 mb-1">
+                        CGPA / GPA
+                      </label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        className="form-input"
+                        value={scholarshipForm.cgpa}
+                        onChange={(e) =>
+                          setScholarshipForm({ ...scholarshipForm, cgpa: e.target.value })
+                        }
+                        placeholder="e.g., 3.8"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">
+                      Why do you deserve this scholarship? *
+                    </label>
+                    <textarea
+                      required
+                      rows={3}
+                      className="form-input"
+                      value={scholarshipForm.whyDeserving}
+                      onChange={(e) =>
+                        setScholarshipForm({ ...scholarshipForm, whyDeserving: e.target.value })
+                      }
+                      placeholder="Tell us about your academic achievements, goals, and why you deserve support..."
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">
+                      Family Background
+                    </label>
+                    <textarea
+                      rows={2}
+                      className="form-input"
+                      value={scholarshipForm.familyBackground}
+                      onChange={(e) =>
+                        setScholarshipForm({ ...scholarshipForm, familyBackground: e.target.value })
+                      }
+                      placeholder="Tell us about your family situation (optional)"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">
+                      Financial Need
+                    </label>
+                    <textarea
+                      rows={2}
+                      className="form-input"
+                      value={scholarshipForm.financialNeed}
+                      onChange={(e) =>
+                        setScholarshipForm({ ...scholarshipForm, financialNeed: e.target.value })
+                      }
+                      placeholder="Describe your financial situation (optional)"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">
+                      Achievements & Extracurriculars
+                    </label>
+                    <textarea
+                      rows={2}
+                      className="form-input"
+                      value={scholarshipForm.achievements}
+                      onChange={(e) =>
+                        setScholarshipForm({ ...scholarshipForm, achievements: e.target.value })
+                      }
+                      placeholder="Share your awards, sports, volunteering, etc. (optional)"
+                    />
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-3 pt-4">
+                    <button
+                      type="submit"
+                      disabled={scholarshipSubmitting}
+                      className="flex-1 btn-indigo py-3 disabled:opacity-60"
+                    >
+                      {scholarshipSubmitting ? "Submitting..." : "Submit Application"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowScholarshipModal(false)}
+                      className="flex-1 btn-outline py-3"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            ) : (
+              <div className="p-12 text-center">
+                <div className="text-6xl mb-4">✓</div>
+                <h3 className="font-bold text-2xl text-indigo-700 mb-2">
+                  Application Submitted!
+                </h3>
+                <p className="text-gray-600 mb-2">
+                  Thank you for applying to the Mudita Scholarship program.
+                </p>
+                <p className="text-gray-500 text-sm mb-6">
+                  Check your email at <strong>{scholarshipForm.email}</strong> for confirmation details. Our team will review your application and reach out within 2-3 weeks.
+                </p>
+                <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 text-left text-sm mb-6">
+                  <p className="text-indigo-900">
+                    Have questions? Email us at{" "}
+                    <a href="mailto:scholarships@muditaalliance.org" className="font-semibold text-indigo-700 hover:underline">
+                      scholarships@muditaalliance.org
+                    </a>
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );

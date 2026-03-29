@@ -1,233 +1,247 @@
-# MentorLink – NGO Mentorship Platform
+# MentorLink - NGO Mentorship and Scholarship Platform
 
-<div align="center">
+MentorLink is a production-oriented MERN platform designed for NGOs to manage mentorship operations, scholarship workflows, and beneficiary engagement with structured, measurable processes.
 
-![MentorLink](https://img.shields.io/badge/MentorLink-v1.0-indigo?style=for-the-badge)
-![MERN Stack](https://img.shields.io/badge/Stack-MERN-green?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
+Deployed context: Mudita - An Alliance for Giving, Pune.
 
-**A production-ready web-based mentorship platform for NGOs, foundations, and organizations.**  
-Deployed for **Mudita – An Alliance for Giving**, Pune.
+## Executive Summary
 
-[Live Demo](https://mentor-link.vercel.app) · [Backend API](https://mentor-link-api.onrender.com) · [Figma Prototype](https://www.figma.com/proto/WIUnXGzcSXq3bu7rcshOAW/Mentor-Link)
+MentorLink solves a practical NGO operations problem: manual mentor-mentee coordination does not scale. The platform digitizes onboarding, matching, sessions, modules, progress tracking, and scholarship intake in one system.
 
-</div>
+Key outcomes:
+- Role-based portal for admin, mentor, and mentee workflows
+- Automated mentor-mentee matching using weighted criteria
+- Session planning and completion tracking
+- Learning module distribution and access
+- Need-analysis driven guidance model
+- Scholarship application flow with acknowledgement email and admin notification
 
----
+## Core Features
 
-## Problem Statement
+### 1. Role-based Access
+- JWT-based authentication
+- Role-aware routing and permissions
+- Protected APIs for administrative operations
 
-First-generation college students from underserved backgrounds face a critical gap — they have talent but lack professional guidance, industry exposure, and career mentorship. NGOs providing financial assistance don't have tools to facilitate structured mentoring at scale.
+### 2. Automated Matching Engine
+- Weighted multi-criteria scoring
+- Criteria: language, domain alignment, mentor workload, mentor experience
+- Supports automatic assignment and manual override
 
-**MentorLink solves this** by providing a white-label mentorship platform that any NGO can deploy with their branding, enabling structured mentor-mentee sessions, automated intelligent matching, and progress tracking.
+### 3. Session Management
+- Session scheduling between mentors and mentees
+- Status lifecycle tracking
+- Feedback and progress capture
 
----
+### 4. Need Analysis
+- Structured mentee self-assessment
+- Captures skill-gap signals used by matching logic
 
-## Features
+### 5. Learning Modules
+- Admin-managed module library
+- Resource distribution to mentees
 
-### Core Features
-- **Role-based Authentication** — Admin, Mentor, Mentee, Facilitator, Alumni, Donor
-- **Automated Mentor-Mentee Matching** — Weighted multi-criteria scoring algorithm (Language + Domain + Workload + Experience)
-- **Session Management** — Schedule, track, and manage one-on-one mentoring sessions with Google Meet/Zoom integration
-- **Learning Modules** — Admin uploads PPT/PDF resources; mentees access them anytime
-- **Need Analysis Form** — Mentees self-rate on 6 soft-skill areas; data feeds the matching algorithm
-- **Progress Tracking** — Visual progress bar tracking 8 sessions across 4 modules = 100%
-- **Email Notifications** — Welcome emails, password reset via Nodemailer
-- **Admin Panel** — Full user management, matching control, session monitoring
+### 6. Scholarship Application Workflow
+- Public scholarship application modal on Get Involved page
+- Backend persistence in MongoDB
+- Email acknowledgement to applicant
+- Email notification to admin inbox
+- Admin APIs to list, review, and update application status
 
-### Technical Highlights
-- JWT-based stateless authentication
-- File upload to Cloudinary
-- Responsive design (Mobile + Desktop)
-- RESTful API architecture
+## Technology Stack
 
----
-
-## Tech Stack
-
-| Layer     | Technology |
-|-----------|-----------|
-| Frontend  | React 18, React Router v6, Tailwind CSS |
-| Backend   | Node.js, Express.js |
-| Database  | MongoDB Atlas |
-| Auth      | JWT (JSON Web Tokens), bcryptjs |
-| Files     | Cloudinary |
-| Email     | Nodemailer (Gmail SMTP) |
-| Deploy    | Vercel (Frontend) + Render (Backend) |
-
----
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, React Router v6, Tailwind CSS |
+| Backend | Node.js, Express.js |
+| Database | MongoDB Atlas |
+| Authentication | JWT, bcryptjs |
+| File Handling | Cloudinary |
+| Email | Nodemailer (SMTP) |
+| Deployment | Vercel (frontend), Render (backend) |
 
 ## Project Structure
 
-```
+```text
 mentor-link/
-├── client/                     # React Frontend
-│   ├── src/
-│   │   ├── pages/
-│   │   │   ├── mentee/         # Mentee dashboard, modules, sessions, need analysis
-│   │   │   ├── mentor/         # Mentor dashboard, mentees, sessions
-│   │   │   └── admin/          # Admin dashboard, users, matching, modules
-│   │   ├── components/         # Navbar, Footer, DashboardLayout
-│   │   ├── context/            # AuthContext (global state)
-│   │   └── utils/              # API utility (axios)
-│   └── package.json
-│
-├── server/                     # Node.js Backend
-│   ├── models/                 # User, Session, Module, NeedAnalysis
-│   ├── controllers/            # Auth, Session, Module, NeedAnalysis, Admin
-│   ├── routes/                 # REST API routes
-│   ├── middleware/             # JWT auth middleware
-│   ├── utils/matching.js       # Matching algorithm
-│   └── index.js                # Express server entry
-│
-└── docs/
-    ├── phase1/                 # Project Phase-1 documentation
-    └── phase2/                 # Project Phase-2 documentation
+  client/
+  server/
+  docs/
+  assets/
 ```
 
----
+## API Summary
 
-## Getting Started
+### Auth
+- POST `/api/auth/register`
+- POST `/api/auth/login`
+- GET `/api/auth/me`
+- POST `/api/auth/forgot-password`
+- PUT `/api/auth/reset-password/:token`
+- PUT `/api/auth/update-profile`
+
+### Sessions
+- POST `/api/sessions`
+- GET `/api/sessions`
+- GET `/api/sessions/stats`
+- PUT `/api/sessions/:id/status`
+
+### Admin
+- GET `/api/admin/stats`
+- GET `/api/admin/users`
+- POST `/api/admin/auto-match`
+- GET `/api/admin/match-suggestions/:id`
+- POST `/api/admin/manual-match`
+
+### Scholarship Applications
+- POST `/api/scholarship-applications/submit` (public)
+- GET `/api/scholarship-applications` (protected)
+- GET `/api/scholarship-applications/:id` (protected)
+- PUT `/api/scholarship-applications/:id/status` (protected)
+
+## Matching Logic
+
+Score model:
+
+```text
+Score = Language(30) + Domain(40) + Workload(20) + Experience(10)
+```
+
+Purpose:
+- Improve assignment quality
+- Reduce admin coordination effort
+- Prioritize compatibility and operational fairness
+
+## Deployment Architecture
+
+### Recommended Hosting
+- Frontend: Vercel
+- Backend: Render
+- Database: MongoDB Atlas
+
+### Environment Variables
+
+#### Frontend (`client/.env`)
+- `REACT_APP_API_URL=https://your-api-domain/api`
+
+#### Backend (`server/.env`)
+- `PORT`
+- `MONGO_URI`
+- `JWT_SECRET`
+- `JWT_EXPIRE`
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+- `EMAIL_HOST`
+- `EMAIL_PORT`
+- `EMAIL_USER`
+- `EMAIL_PASS`
+- `EMAIL_FROM`
+- `CLIENT_URL`
+
+## Existing Domain Strategy (muditaalliance.org)
+
+You can keep the current Mudita website fully live and launch MentorLink in parallel.
+
+Recommended DNS strategy:
+- Existing website remains at: `muditaalliance.org`
+- MentorLink frontend: `mentor.muditaalliance.org`
+- MentorLink backend API: `api.muditaalliance.org`
+
+Benefits:
+- Zero disruption to existing website
+- Clear separation between public website and application
+- Easier operations, scaling, and rollback
+
+## Scalability Roadmap
+
+### Phase A - Pilot
+- Small user base
+- Low-cost infrastructure
+- Focus on workflow validation and feedback cycle
+
+### Phase B - Growth
+- Upgrade backend to always-on paid plan
+- Upgrade Atlas tier for performance and backups
+- Add monitoring and alerting
+- Add endpoint rate limiting and anti-abuse controls
+
+### Phase C - Scale
+- Horizontal backend scaling
+- Improved observability and incident response
+- Dedicated transactional email provider
+- Stronger compliance and audit trails
+
+## Indicative Costing (Monthly)
+
+These are approximate and depend on usage.
+
+### Pilot
+- Total range: USD 0 to 120
+
+### Growth
+- Total range: USD 120 to 490
+
+### Scale
+- Total range: USD 400 to 2300+
+
+Detailed assumptions are documented in:
+- `assets/Documentation/DOMAIN_SCALING_COSTING.md`
+
+## Local Setup
 
 ### Prerequisites
-- Node.js >= 18
-- MongoDB Atlas account (free)
-- Cloudinary account (free)
-- Gmail account (for email)
+- Node.js 18+
+- MongoDB Atlas connection
+- SMTP credentials
 
-### Installation
-
-**1. Clone the repository**
-```bash
-git clone https://github.com/Jaykumar-Kale/mentor-link.git
-cd mentor-link
-```
-
-**2. Install all dependencies**
+### Install
 ```bash
 npm run install-all
 ```
 
-**3. Configure environment variables**
+### Run development
 ```bash
-cd server
-cp .env.example .env
-# Fill in your MongoDB URI, JWT secret, Cloudinary keys, Gmail credentials
-```
-
-**4. Run development servers**
-```bash
-# From root folder - starts both frontend and backend
 npm run dev
 ```
 
-Open http://localhost:3000 for the frontend.  
-API runs at http://localhost:5000.
+Default local URLs:
+- Frontend: `http://localhost:3000`
+- Backend: `http://localhost:5000`
 
----
-
-## API Reference
-
-### Auth Endpoints
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/register` | Register new user |
-| POST | `/api/auth/login` | Login |
-| GET | `/api/auth/me` | Get current user |
-| POST | `/api/auth/forgot-password` | Send reset email |
-| PUT | `/api/auth/reset-password/:token` | Reset password |
-| PUT | `/api/auth/update-profile` | Update profile |
-
-### Session Endpoints
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/sessions` | Create session |
-| GET | `/api/sessions` | Get my sessions |
-| GET | `/api/sessions/stats` | Session statistics |
-| PUT | `/api/sessions/:id/status` | Update status + feedback |
-
-### Admin Endpoints
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/admin/stats` | Dashboard statistics |
-| GET | `/api/admin/users` | All users (with filters) |
-| POST | `/api/admin/auto-match` | Run matching algorithm |
-| GET | `/api/admin/match-suggestions/:id` | Mentor suggestions for mentee |
-| POST | `/api/admin/manual-match` | Manually assign pair |
-
----
-
-## Matching Algorithm
-
-The core innovation of MentorLink is the **Weighted Multi-Criteria Scoring Algorithm** that automatically matches mentees with the most compatible mentor.
-
-```
-Score = Language Match (30pts) + Domain Match (40pts) + Workload (20pts) + Experience (10pts)
-```
-
-**Criteria:**
-1. **Language (30pts)** — Shared languages between mentor and mentee
-2. **Domain (40pts)** — Mentor expertise matches mentee's weak areas from Need Analysis
-3. **Workload (20pts)** — Mentors with fewer current mentees are preferred
-4. **Experience (10pts)** — Years of industry experience (capped at 10pts)
-
-See `server/utils/matching.js` for full implementation.
-
----
-
-## Deployment
-
-### Frontend → Vercel
+### Production build check
 ```bash
 cd client
 npm run build
-# Deploy the build/ folder to Vercel
-# Set environment variable: REACT_APP_API_URL = https://your-api.onrender.com
 ```
 
-### Backend → Render
-1. Connect your GitHub repo to Render
-2. Root directory: `server`
-3. Build command: `npm install`
-4. Start command: `npm start`
-5. Add all environment variables from `.env.example`
+## Readiness Status
 
----
+Current validation snapshot:
+- Frontend production build: passing
+- Backend route loading: passing
+- Scholarship workflow modules: present
+- CORS hardened for multi-origin and preview domains
 
-## Screenshots
+## Documentation Index
 
-| Page | Description |
-|------|-------------|
-| Home | Mudita Alliance landing page with CTA |
-| Login | Role-based login (Mentor, Mentee, Admin, etc.) |
-| Mentee Dashboard | Welcome screen with progress tracking |
-| Sessions | Schedule meetings, track completion |
-| Modules | Learning resources by topic |
-| Need Analysis | Self-rating form (1-5 emoji scale) |
-| Mentor Dashboard | Assigned mentees overview |
-| Admin Matching | Auto-match + manual assignment |
+### Stakeholder and Ops Documentation
+- `assets/Documentation/README.md`
+- `assets/Documentation/DEPLOYMENT_READINESS_REPORT.md`
+- `assets/Documentation/DEMO_PLAYBOOK_MUDITA.md`
+- `assets/Documentation/DOMAIN_SCALING_COSTING.md`
+- `assets/Documentation/RUNBOOK_PRODUCTION.md`
 
----
-
-## Project Phase Documentation
-
-- [Phase 1 Synopsis](./docs/phase1/Synopsis.md)
-- [Phase 2 Report](./docs/phase2/Report.md)
-
----
+### Academic Documentation
+- `docs/phase1/Synopsis.md`
+- `docs/phase2/Report.md`
 
 ## Author
 
-**Jaykumar Kale**  
-B.E. Information Technology, 3rd Year  
-PICT College, Pune  
-GitHub: [@Jaykumar-Kale](https://github.com/Jaykumar-Kale)
-
-**Deployed for:** Mudita – An Alliance for Giving, Pune  
-**Contact:** mentoring@muditaalliance.org
-
----
+Jaykumar Kale  
+B.E. Information Technology, PICT Pune  
+GitHub: https://github.com/Jaykumar-Kale
 
 ## License
 
-MIT License – See [LICENSE](./LICENSE) for details.
+MIT

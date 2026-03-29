@@ -23,6 +23,7 @@ body {
   color: #1e293b;
   margin: 0;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 700; }
@@ -100,6 +101,18 @@ h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 700; }
 /* ── Section spacing ── */
 .section { padding: 80px 24px; }
 .section-sm { padding: 48px 24px; }
+
+@media (max-width: 640px) {
+  .section { padding: 56px 16px; }
+  .section-sm { padding: 40px 16px; }
+  .page-header { padding: 44px 16px 36px; }
+  .btn-amber,
+  .btn-indigo,
+  .btn-outline {
+    width: 100%;
+    text-align: center;
+  }
+}
 
 /* ── Gradient text ── */
 .gradient-text {

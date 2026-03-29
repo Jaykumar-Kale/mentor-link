@@ -1,13 +1,22 @@
-node_modules
+node_modules/
+client/node_modules/
+server/node_modules/
+
 .env
-.env.example
-client/build
+client/.env
+server/.env
+
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
 .DS_Store
 Thumbs.db
-/tmp
 
-# Ignore the Assets folder, which may contain Images.
-assets
+client/build/
+client/.cache/
+server/tmp/
+tmp/
 
 
