@@ -1,5 +1,11 @@
 # Quick Start: Testing Scholarship Application Locally
 
+## Live Deployment (Current)
+
+- Frontend: https://mentor-link-bay.vercel.app/
+- Backend: https://mentor-link-8ypw.onrender.com/
+- API Base: https://mentor-link-8ypw.onrender.com/api
+
 ## Prerequisites
 - Node.js installed
 - MongoDB connection string ready
@@ -59,6 +65,11 @@ Look for **"Apply for Scholarship"** card with the button.
 
 Click **"Apply Now"**
 
+Production page:
+```
+https://mentor-link-bay.vercel.app/get-involved
+```
+
 ### Step 3: Fill Out the Modal Form
 
 **Required fields:**
@@ -107,6 +118,17 @@ If emails don't arrive:
 ## API Testing (Without UI)
 
 Testing with cURL or Postman:
+
+Production example:
+```bash
+curl -X POST https://mentor-link-8ypw.onrender.com/api/scholarship-applications/submit \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Test Student",
+    "email": "test@email.com",
+    "whyDeserving": "I deserve this scholarship because I am from an underserved background and am committed to academics."
+  }'
+```
 
 ```bash
 # POST /api/scholarship-applications/submit
@@ -254,8 +276,8 @@ Before deploying, test in fresh browser (no cache):
 
 ## Next Steps
 
-1. **Deploy Backend**: Push to Render or your hosting
-2. **Deploy Frontend**: Push to Vercel and set `REACT_APP_API_URL` to your Render URL
+1. **Backend Deployed**: https://mentor-link-8ypw.onrender.com/
+2. **Frontend Deployed**: https://mentor-link-bay.vercel.app/
 3. **Test in Production**: Fill form with real email, verify emails arrive
 4. **Set Up Admin Page**: (Optional) Create admin dashboard to review applications
 5. **Configure Notifications**: (Optional) Add email status updates

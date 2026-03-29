@@ -2,6 +2,12 @@
 
 This folder contains final stakeholder-facing documentation for the MentorLink deployment and demo.
 
+## Live Deployment Links (Current)
+
+- Frontend: https://mentor-link-bay.vercel.app/
+- Backend: https://mentor-link-8ypw.onrender.com/
+- API Base: https://mentor-link-8ypw.onrender.com/api
+
 ## Contents
 
 1. `DEPLOYMENT_READINESS_REPORT.md`

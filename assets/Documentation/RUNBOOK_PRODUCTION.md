@@ -1,5 +1,11 @@
 # Production Runbook
 
+## 0. Live Endpoints (Current)
+
+- Frontend: `https://mentor-link-bay.vercel.app/`
+- Backend: `https://mentor-link-8ypw.onrender.com/`
+- API Base: `https://mentor-link-8ypw.onrender.com/api`
+
 ## 1. Deploy Sequence
 
 1. Deploy backend on Render
@@ -8,6 +14,10 @@
 4. Deploy frontend on Vercel
 5. Update backend `CLIENT_URL`
 6. Re-verify login, need analysis, sessions, scholarship flow
+
+Current deployment values:
+- Vercel `REACT_APP_API_URL=https://mentor-link-8ypw.onrender.com/api`
+- Render `CLIENT_URL=https://mentor-link-bay.vercel.app`
 
 ## 2. Health Checks
 

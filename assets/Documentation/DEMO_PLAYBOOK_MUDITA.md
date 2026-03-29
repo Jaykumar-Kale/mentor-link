@@ -6,6 +6,12 @@ Demonstrate that MentorLink is ready for pilot use and aligned with Mudita's ope
 ## Recommended Demo Duration
 20 to 30 minutes
 
+## Live Demo Links (Current)
+
+- Frontend: https://mentor-link-bay.vercel.app/
+- Backend: https://mentor-link-8ypw.onrender.com/
+- API Base: https://mentor-link-8ypw.onrender.com/api
+
 ## Demo Narrative
 1. Problem and impact context (2 min)
 2. Platform walkthrough for each role (12-15 min)
@@ -67,7 +73,7 @@ Demonstrate that MentorLink is ready for pilot use and aligned with Mudita's ope
 - Provide phased budget table from `DOMAIN_SCALING_COSTING.md`.
 
 2. Can we keep current website and add this platform?
-- Yes. Keep current site at root domain and host MentorLink on a subdomain such as `mentor.muditaalliance.org`.
+- Yes. Current pilot is live on Vercel/Render (`mentor-link-bay.vercel.app` and `mentor-link-8ypw.onrender.com`) and can later be mapped to Mudita subdomains.
 
 3. What about data privacy and security?
 - JWT auth, hashed passwords, role-based access, managed cloud DB, and planned audit/log improvements.

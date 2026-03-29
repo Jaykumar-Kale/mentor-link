@@ -4,6 +4,9 @@
 - Name: MentorLink
 - Stack: React (CRA) + Node.js/Express + MongoDB Atlas
 - Hosting plan: Vercel (frontend) + Render (backend) + Atlas (database)
+- Frontend URL: https://mentor-link-bay.vercel.app/
+- Backend URL: https://mentor-link-8ypw.onrender.com/
+- API Base URL: https://mentor-link-8ypw.onrender.com/api
 
 ## Current Status
 
@@ -41,14 +44,14 @@
 ## Pre-Deployment Checklist
 
 - [ ] Set Render environment variables
-- [ ] Set Vercel `REACT_APP_API_URL`
+- [x] Set Vercel `REACT_APP_API_URL`
 - [ ] Verify Atlas IP/network access policy
 - [ ] Verify JWT and email credentials
 - [ ] Confirm Cloudinary keys
 - [ ] Test login, need analysis, session scheduling, module access
 - [ ] Test scholarship submission and both outgoing emails
 - [ ] Run final frontend build
-- [ ] Validate CORS from production domain
+- [x] Validate CORS from production domain
 
 ## Demo-Day Checklist
 

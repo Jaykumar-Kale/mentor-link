@@ -241,12 +241,12 @@ EMAIL_PORT=587
 EMAIL_USER=your-gmail@gmail.com
 EMAIL_PASS=your-app-password
 EMAIL_FROM=Mudita Alliance <your-email@gmail.com>
-CLIENT_URL=https://your-frontend-domain.com
+CLIENT_URL=https://mentor-link-bay.vercel.app
 ```
 
 **Vercel (Frontend)**
 ```
-REACT_APP_API_URL=https://your-backend-api.onrender.com
+REACT_APP_API_URL=https://mentor-link-8ypw.onrender.com/api
 ```
 
 ### API Rate Limiting

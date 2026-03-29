@@ -4,6 +4,12 @@ MentorLink is a production-oriented MERN platform designed for NGOs to manage me
 
 Deployed context: Mudita - An Alliance for Giving, Pune.
 
+## Live Deployment
+
+- Frontend (Vercel): https://mentor-link-bay.vercel.app/
+- Backend API (Render): https://mentor-link-8ypw.onrender.com/
+- API Base URL used by frontend: https://mentor-link-8ypw.onrender.com/api
+
 ## Executive Summary
 
 MentorLink solves a practical NGO operations problem: manual mentor-mentee coordination does not scale. The platform digitizes onboarding, matching, sessions, modules, progress tracking, and scholarship intake in one system.
@@ -122,7 +128,7 @@ Purpose:
 ### Environment Variables
 
 #### Frontend (`client/.env`)
-- `REACT_APP_API_URL=https://your-api-domain/api`
+- `REACT_APP_API_URL=https://mentor-link-8ypw.onrender.com/api`
 
 #### Backend (`server/.env`)
 - `PORT`
@@ -147,6 +153,10 @@ Recommended DNS strategy:
 - Existing website remains at: `muditaalliance.org`
 - MentorLink frontend: `mentor.muditaalliance.org`
 - MentorLink backend API: `api.muditaalliance.org`
+
+Current live pilot URLs:
+- Frontend: `https://mentor-link-bay.vercel.app/`
+- Backend API: `https://mentor-link-8ypw.onrender.com/`
 
 Benefits:
 - Zero disruption to existing website

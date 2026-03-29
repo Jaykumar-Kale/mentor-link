@@ -2,6 +2,10 @@
 
 ## 1. Domain Strategy with Existing muditaalliance.org Website
 
+Current deployed pilot:
+- Frontend: `https://mentor-link-bay.vercel.app/`
+- Backend/API: `https://mentor-link-8ypw.onrender.com/`
+
 You can keep the existing Mudita website live and launch MentorLink in parallel.
 
 ### Recommended Setup
@@ -23,10 +27,10 @@ You can keep the existing Mudita website live and launch MentorLink in parallel.
 ## 2. Environment Configuration for Subdomain Setup
 
 ### Frontend (Vercel)
-- `REACT_APP_API_URL=https://api.muditaalliance.org/api`
+- `REACT_APP_API_URL=https://mentor-link-8ypw.onrender.com/api`
 
 ### Backend (Render)
-- `CLIENT_URL=https://mentor.muditaalliance.org`
+- `CLIENT_URL=https://mentor-link-bay.vercel.app`
 - CORS allowlist should include production + preview domains
 
 ## 3. Scaling Plan (All Perspectives)
